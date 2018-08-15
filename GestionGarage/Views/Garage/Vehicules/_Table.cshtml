@@ -1,0 +1,37 @@
+﻿@model List<GestionGarage.Models.BO.Vehicule>
+@{ 
+    int i = 1;
+}
+
+<table class="table table-hover table-sm table-bordered ds-table">
+
+    <thead>
+        <tr class="table-active">
+            <th valign="middle">Code</th>
+            <th valign="middle">Libelle</th>
+            <th valign="middle">Marque</th>
+            <th valign="middle">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach(var val in Model)
+        {
+            <tr class="@Html.Raw(((i++) % 2 == 0) ? "table-light"
+                                                  : null)">
+                <td valign="middle">@val.code</td>
+                <td valign="middle">@val.libelle</td>
+                <td valign="middle">@val.marque</td>
+                <td valign="middle" align="center">
+                    <button type="button" class="btn btn-sm btn-default" title="Supprimer" onclick="ggSupprimerTable('@val.id', 'div_table-donnee', 'Vehicules');">
+                        <i class="fa fa-remove"></i> Supprimer
+                    </button>
+                    <button type="button" class="btn btn-sm btn-default" title="Modifier" onclick="ggSelectionTable('@val.id', 'Vehicules');">
+                        <i class="fa fa-refresh"></i> Modifier
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

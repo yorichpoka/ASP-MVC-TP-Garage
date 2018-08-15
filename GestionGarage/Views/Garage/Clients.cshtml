@@ -1,0 +1,180 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        var form = $('#form');
+
+        function ggSelectionTable(id, page) {
+
+            // -- Ajax -- //
+            $.ajax({
+                type: "POST",
+                url: '/Garage/Selection_Enregistrement',
+                data: {
+                    id: id,
+                    page: page
+                },
+                success: function (resultat) {
+                    // -- Tester si le traitement s'est bien effectué -- //
+                    if (resultat.exception == null) {
+                        // -- Afficher les attribut dans la page -- //
+                        $('#id').val(resultat.donnee.id);
+                        $('#code').val(resultat.donnee.code);
+                        $('#nom').val(resultat.donnee.nom);
+                        $('#prenom').val(resultat.donnee.prenom);
+                    }
+                    else {
+                        // -- Afficher une alerte sur un element -- //
+                        alert(resultat.exception);
+                    }
+                },
+                error: function () {
+                    // -- Afficher une alerte sur un element -- //
+                    alert('Une erreur est survenue');
+                }
+            });
+
+        }
+
+        // -- Lorsque le document est chargé -- //
+        $(
+            function () {
+
+                // -- Soumission du formulaire ajout/modification -- //
+                try {
+
+                    // -- Soumet le formulaire -- //
+                    form.on("submit",
+                        function (e) {
+                            // -- Désactiver la soumission -- //
+                            e.preventDefault();
+
+                            // -- Définition de l'action de traitement -- //
+                            var action_ajouter = (parseInt($('#id').val()) === 0);
+
+                            // -- Ajax -- //
+                            $.ajax({
+                                type: "POST",
+                                url: '/Garage/' + (action_ajouter ? 'Ajouter_Enregistrement'
+                                                                  : 'Modifier_Enregistrement'),
+                                data: {
+                                    obj: JSON.stringify(form.ggConvertToJSON()),
+                                    page: 'Clients'
+                                },
+                                success: function (resultat) {
+                                    // -- Tester si le traitement s'est bien effectué -- //
+                                    if (resultat.exception == null) {
+                                        // -- Vider le formulaire -- //
+                                        form[0].reset();
+                                        $('#id').val('0');
+                                        // -- Actualiser la table -- //
+                                        ggRechargerTable('Clients', 'div_table-donnee');
+                                    }
+                                    else {
+                                        // -- Afficher une alerte sur un element -- //
+                                        alert(resultat.exception);
+                                    }
+                                },
+                                error: function () {
+                                    // -- Afficher une alerte sur un element -- //
+                                    alert('Une erreur est survenue');
+                                }
+                            });
+                        }
+                    );
+
+                } catch (e) { console.log(e.message); }
+
+            }
+        );
+
+    </script>
+
+}
+
+<div class="card bg-light" style="margin-top: 20px; margin-bottom: 20px;">
+
+    <div class="card-body">
+
+        <p class="lead">
+            FORMULAIRE
+        </p>
+
+        <hr />
+
+        <form method="post" id="form">
+
+            <div class="form-row">
+
+                <input type="hidden" id="id" name="id" value="0" />
+
+                <div class="col-12 col-sm-4 col-xl-4">
+
+                    <div class="form-group">
+                        <label for="code">Code :</label>
+                        <input type="text" class="form-control" id="code" name="code" placeholder="Code ..." required>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-sm-4 col-xl-4">
+
+                    <div class="form-group">
+                        <label for="nom">Nom :</label>
+                        <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom ..." required>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-sm-4 col-xl-4">
+
+                    <div class="form-group">
+                        <label for="prenom">Prenom :</label>
+                        <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prenom ..." required>
+                    </div>
+
+                </div>
+
+                <div class="col-12 col-sm-12 col-xl-12">
+
+                    <button type="button" id="btn_calculer_paiement" class="btn btn-default float-left" onclick="$('#form')[0].reset(); $('#id').val('0');">
+                        <i class="fa fa-plus"></i> NOUVEAU
+                    </button>
+
+                    <button type="submit" id="btn_enregistrer" class="btn btn-success float-right">
+                        <i class="fa fa-check"></i> ENREGISTRER
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<div class="card">
+
+    <div class="card-body">
+
+        <p class="lead">
+            TABLE
+        </p>
+
+        <hr />
+
+        <div class="table-responsive" id="div_table-donnee">
+
+            @Html.Partial("Clients/_Table", (ViewBag.donnee.clients as List<GestionGarage.Models.BO.Client>))
+
+        </div>
+
+    </div>
+
+</div>

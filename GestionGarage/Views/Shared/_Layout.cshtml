@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>@ViewBag.donnee.titre</title>
+
+    <!-- 1. font-awesome -->
+    <link href="@Url.Content("~/Resources/plugins/font-awesome/css/font-awesome.min.css")" rel="stylesheet" type="text/css" />
+    <!-- 2. bootstrap.min -->
+    <link href="@Url.Content("~/Resources/css/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <!-- App.css -->
+    <link href="@Url.Content("~/Resources/css/app.style.css")" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+    <div class="container body-content">
+
+        <ul class="nav nav-tabs" id="tab_page" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link @Html.Raw(ViewBag.donnee.bouton_vehicules)" id="btn_page_vehicules" href="/Garage/Vehicules/" >
+                    Gestion des Vehicules
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link @Html.Raw(ViewBag.donnee.bouton_clients)" id="btn_page_clients" href="/Garage/Clients/" >
+                    Gestion des clients
+                </a>
+            </li>
+        </ul>
+        <div class="tab-content" id="tab_pageContent">
+
+            <div class="tab-pane fade @Html.Raw(ViewBag.donnee.page_vehicules)" id="page_vehicules" role="tabpanel" aria-labelledby="btn_page_vehicules">
+                @if (ViewBag.donnee.page_vehicules != null)
+                {
+                    @RenderBody()
+                }
+            </div>
+
+            <div class="tab-pane fade @Html.Raw(ViewBag.donnee.page_clients)" id="page_clients" role="tabpanel" aria-labelledby="btn_page_clients">
+                @if (ViewBag.donnee.page_clients != null)
+                {
+                    @RenderBody()
+                }
+            </div>
+
+        </div>
+
+        
+
+    </div>
+
+    <!-- 1. jQuery 3.0.0 -->
+    <script src="@Url.Content("~/Resources/js/jquery-3.0.0.min.js")" type="text/javascript"></script>
+    <!-- 2. bootstrap.min -->
+    <script src="@Url.Content("~/Resources/js/bootstrap.min.js")" type="text/javascript"></script>
+    <!-- App.script -->
+    <script src="@Url.Content("~/Resources/js/app.script.js")" type="text/javascript"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+
+</html>
